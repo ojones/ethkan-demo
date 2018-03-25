@@ -31,7 +31,7 @@ $(document).ready(function(){
     $("#claimcard").click(function(){
         // patch randomly selected card with new address from claimed_by
         var cardId = selectRandom(Object.keys(cards))
-        claimCard(cardId, function(result){
+        claimCard(cardId, randAddr(), function(result){
             $("#div3").html('User ' + result.claimed_by + ' claimed "' + cards[cardId].task_name + '"');
             // get and update list of cards
             getCards(updateCardsList)

@@ -18,11 +18,11 @@ function createCard(card, successFn) {
         });
 }
 
-function claimCard(cardId, successFn) {
+function claimCard(cardId, userAddr, successFn) {
     $.ajax({
         type: "POST",
         url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '.json?x-http-method-override=PATCH',
-        data: JSON.stringify({ claimed_by: randAddr() }),
+        data: JSON.stringify({ claimed_by: userAddr }),
         success: function(result) {
             successFn(result)
         },
