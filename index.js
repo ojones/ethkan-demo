@@ -1,94 +1,130 @@
 $(document).ready(function(){
 
-    $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(cards){
+    var cards; // global dictionary of cards
 
-        $("#div1").html(JSON.stringify(cards));
-
-        $("#listcards").click(function(){
-            $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(result){
-                $("#div1").html(JSON.stringify(result));
-            }});
-        });
-
-        $("#createcard").click(function(){
-            $.ajax({
-                type: "POST",
-                url: 'https://ethkanproject.firebaseio.com/cards.json',
-                data: JSON.stringify(newCard()),
-                success: function(result) {
-                    $("#div2").html(JSON.stringify(result));
-                    $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(updatedCards){
-                        cards = updatedCards
-                    }});
-                },
-                dataType: "json"
-                });
-        });
-
-        $("#claimcard").click(function(){
-            var cardId = selectRandom(Object.keys(cards))
-            $.ajax({
-                type: "POST",
-                url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '/.json?x-http-method-override=PATCH',
-                data: JSON.stringify({ claimed_by: randAddr() }),
-                success: function(result) {
-                    $("#div3").html(JSON.stringify('User ' + result.claimed_by + ' claimed ' + cards[cardId].name));
-                },
-                dataType: "json"
-                });
-        });
-
-        $("#approvecard").click(function(){
-            var cardId = selectRandom(Object.keys(cards))
-            $.ajax({
-                type: "POST",
-                url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '/.json?x-http-method-override=PATCH',
-                data: JSON.stringify({ acct_bal: 0 }),
-                success: function(result) {
-                    $("#div4").html(JSON.stringify('Card ' + cards[cardId].name + ' was approved and funds were released'));
-                },
-                dataType: "json"
-                });
-        });
-
-        $("#cardbalance").click(function(){
-            var cardId = selectRandom(Object.keys(cards))
-            $.ajax({url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '/.json', success: function(card){
-                $("#div5").html(JSON.stringify('The balance of card ' + card.name + ' is ' + card.acct_bal));
-            }});
-        });
-
-        $("#fundcard").click(function(){
-            var cardId = selectRandom(Object.keys(cards))
-            var addVal = randNum()
-            var newBalance = cards[cardId].acct_bal + addVal
-            $.ajax({
-                type: "POST",
-                url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '/.json?x-http-method-override=PATCH',
-                data: JSON.stringify({ acct_bal: newBalance }),
-                success: function(result) {
-                    $("#div6").html(JSON.stringify('Added ' + addVal + ' to card ' + cards[cardId].name + ' balance'));
-                },
-                dataType: "json"
-                });
-        });
-
-        $("#deletecards").click(function(){
-            var cardId = selectRandom(Object.keys(cards))
-            var addVal = randNum()
-            var newBalance = cards[cardId].acct_bal + addVal
-            $.ajax({
-                type: "PUT",
-                url: 'https://ethkanproject.firebaseio.com/cards.json',
-                data: JSON.stringify(newCard()),
-                success: function(result) {
-                    console.log(result);
-                    $("#div7").html(JSON.stringify('Deleted all cards but added new one'));
-                },
-                dataType: "json"
-                });
-        });
+    // get cards first and display
+    $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(result){
+        cards = result;
+        $("#div1").html(JSON.stringify(result));
     }});
+
+    // ui event for get cards button
+    $("#listcards").click(function(){
+        $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(result){
+            cards = result;
+            $("#div1").html(JSON.stringify(result));
+        }});
+    });
+
+    // ui event for create card
+    $("#createcard").click(function(){
+        // post new card
+        $.ajax({
+            type: "POST",
+            url: 'https://ethkanproject.firebaseio.com/cards.json',
+            data: JSON.stringify(newCard()),
+            success: function(result) {
+                $("#div2").html('Created new card with key ' + result);
+                // get and update list of cards
+                $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(updatedCards){
+                    cards = updatedCards
+                    $("#div1").html(JSON.stringify(updatedCards));
+                }});
+            },
+            dataType: "json"
+            });
+    });
+
+    // ui event for claim card
+    $("#claimcard").click(function(){
+        // patch randomly selected card with new address from claimed_by
+        var cardId = selectRandom(Object.keys(cards))
+        $.ajax({
+            type: "POST",
+            url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '.json?x-http-method-override=PATCH',
+            data: JSON.stringify({ claimed_by: randAddr() }),
+            success: function(result) {
+                $("#div3").html('User ' + result.claimed_by + ' claimed "' + cards[cardId].task_name + '"');
+                // get and update list of cards
+                $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(updatedCards){
+                    cards = updatedCards
+                    $("#div1").html(JSON.stringify(updatedCards));
+                }});
+            },
+            dataType: "json"
+            });
+    });
+
+    // ui event for approve card
+    $("#approvecard").click(function(){
+        // patch randomly selected card with 0 for acct_bal
+        var cardId = selectRandom(Object.keys(cards))
+        $.ajax({
+            type: "POST",
+            url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '.json?x-http-method-override=PATCH',
+            data: JSON.stringify({ acct_bal: 0 }),
+            success: function(result) {
+                $("#div4").html('Card "' + cards[cardId].task_name + '" was approved and funds were released');
+                // get and update list of cards
+                $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(updatedCards){
+                    cards = updatedCards
+                    $("#div1").html(JSON.stringify(updatedCards));
+                }});
+            },
+            dataType: "json"
+            });
+    });
+
+    // ui event for card balance
+    $("#cardbalance").click(function(){
+        // get randomly selected card acct_bal
+        var cardId = selectRandom(Object.keys(cards))
+        $.ajax({url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '.json', success: function(card){
+            $("#div5").html('The balance of card "' + card.task_name + '" is ' + card.acct_bal);
+        }});
+    });
+
+    // ui event for fund card
+    $("#fundcard").click(function(){
+        // patch randomly selected card by adding funds to acct_bal
+        var cardId = selectRandom(Object.keys(cards))
+        var fundsToAdd = randNum()
+        var newBalance = cards[cardId].acct_bal + fundsToAdd
+        $.ajax({
+            type: "POST",
+            url: 'https://ethkanproject.firebaseio.com/cards/' + cardId + '.json?x-http-method-override=PATCH',
+            data: JSON.stringify({ acct_bal: newBalance }),
+            success: function(result) {
+                $("#div6").html('Added ' + fundsToAdd + ' to card "' + cards[cardId].task_name + '" balance');
+                // get and update list of cards
+                $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(updatedCards){
+                    cards = updatedCards
+                    $("#div1").html(JSON.stringify(updatedCards));
+                }});
+            },
+            dataType: "json"
+            });
+    });
+
+    // ui event for delete cards
+    $("#deletecards").click(function(){
+        // put only one new card there by deleting all others
+        $.ajax({
+            type: "PUT",
+            url: 'https://ethkanproject.firebaseio.com/cards.json',
+            data: JSON.stringify({ FristCard: newCard() }),
+            success: function(result) {
+                cards = result;
+                $("#div7").html('Deleted all cards but added new one');
+                // get and update list of cards
+                $.ajax({url: "https://ethkanproject.firebaseio.com/cards.json", success: function(updatedCards){
+                    cards = updatedCards
+                    $("#div1").html(JSON.stringify(updatedCards));
+                }});
+            },
+            dataType: "json"
+            });
+    });
 
     function randAddr() {
         var text = "";
@@ -127,12 +163,11 @@ $(document).ready(function(){
     }
 
     function newCard() {
-        return { '-L8QjStart': {
-                acct_bal: randNum(),
-                claimed_by: randAddr(),
-                task_name: randName(),
-                project_token: randToken()
-            }
+        return {
+            acct_bal: randNum(),
+            claimed_by: randAddr(),
+            task_name: randName(),
+            project_token: randToken()
         }
     }
 
