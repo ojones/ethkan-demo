@@ -1,39 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style>
+body {
+    color: #4a4a4a;
+}
+h4 {
+    margin: 4px;
+}
+button {
+    margin: 2px 2px 2px 20px;
+}
+.item {
+    border-radius: 10px;
+    border: 3px solid #E0EBF5;
+    padding: 10px;
+    max-width: 500px;
+    margin: 2px;
+}
+.result {
+    background: #ffffe3;
+    margin: 2px 2px 2px 20px;
+    padding: 5px;
+}
+
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 <body>
 
-<h2>EthKan</h2>
+<h2>EthKan Backend Emulator</h2>
+<h5>Work in progress. The purpose of this is to provide a temporary backend for work on EthKan frontend.</h5>
 
-<h3>Get list of cards:</h3>
-<div id="div1"></div>
-<button id="listcards">Get Cards</button>
+<div class="item">
+    <h4>Get list of cards:</h4>
+    <div id="div1" class="result"></div>
+    <button id="listcards">Get Cards</button>
+</div>
 
-<h3>Drag card to Deployed swimlane calls Create Card:</h3>
-<div id="div2"></div>
-<button id="createcard">Create Card</button>
+<div class="item">
+    <h4>Drag card to "Deployed" swimlane calls Create Card:</h4>
+    <div id="div2" class="result"></div>
+    <button id="createcard">Create Card</button>
+</div>
 
-<h3>Drag card to Claimed swimlane calls Claim Card:</h3>
-<div id="div3"></div>
-<button id="claimcard">Claim Card</button>
+<div class="item">
+    <h4>Drag card to "Claimed" swimlane calls Claim Card:</h4>
+    <div id="div3" class="result"></div>
+    <button id="claimcard">Claim Card</button>
+</div>
 
-<h3>Drag card to Approved swimlane calls Aprove Card:</h3>
-<div id="div4"></div>
-<button id="approvecard">Approve Card</button>
+<div class="item">
+    <h4>Drag card to "Approved" swimlane calls Aprove Card:</h4>
+    <div id="div4" class="result"></div>
+    <button id="approvecard">Approve Card</button>
+</div>
 
-<h3>Frontend should request and listen for Card Balance updates</h3>
-<div id="div5"></div>
-<button id="cardbalance">Card Balance</button>
+<div class="item">
+    <h4>Frontend should request and listen for Card Balance updates</h4>
+    <div id="div5" class="result"></div>
+    <button id="cardbalance">Card Balance</button>
+</div>
 
-<h3>Click button to Fund Card</h3>
-<div id="div6"></div>
-<button id="fundcard">Fund Card</button>
+<div class="item">
+    <h4>Click "Fund" button to Fund Card</h4>
+    <div id="div6" class="result"></div>
+    <button id="fundcard">Fund Card</button>
+</div>
 
-<h3>This is only for proof of concept backend</h3>
-<div id="div7"></div>
-<button id="deletecards">Delete Cards</button>
+<div class="item">
+    <h4>Delete is only for proof of concept backend</h4>
+    <div id="div7" class="result"></div>
+    <button id="deletecards">Delete Cards</button>
+</div>
 
 </body>
 </html>
