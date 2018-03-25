@@ -1,0 +1,21 @@
+{
+  "name": "ethkan-demo",
+  "version": "1.0.0",
+  "description": "proof of concept for ethkan",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ojones/ethkan-demo.git"
+  },
+  "author": "oswald jones",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ojones/ethkan-demo/issues"
+  },
+  "homepage": "https://github.com/ojones/ethkan-demo#readme",
+  "dependencies": {
+  }
+}
