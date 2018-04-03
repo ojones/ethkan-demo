@@ -1,18 +1,7 @@
-var firebase = require('firebase-admin');
-
 // this is the code that directly touches ui elements
 $(document).ready(function(){
 
     var cards; // global dictionary of cards
-
-    function startListeners() {
-        console.log('firebase listener started')
-        firebase.database().ref('/cards').on('value', function(postSnapshot) {
-            console.log('firebase event triggered')
-            cards = postSnapshot.val()
-            updateCardsList(cards)
-        });
-    }
 
     function updateCardsList(result) {
         cards = result;
@@ -91,7 +80,4 @@ $(document).ready(function(){
             getCards(updateCardsList)
         });
     });
-
-    // Start the server.
-    startListeners();
 });
