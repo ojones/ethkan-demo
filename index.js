@@ -3,13 +3,18 @@ $(document).ready(function(){
 
     var cards; // global dictionary of cards
 
+    // update card list on ui
     function updateCardsList(result) {
         cards = result;
         $("#div1").html(JSON.stringify(result));
     }
 
-    // get cards first and display
-    getCards(updateCardsList)
+    // set ui to update on any change to cards db in real-time
+    function startListeners() {
+        firebase.database().ref('/cards').on('value', function(postSnapshot) {
+            updateCardsList(postSnapshot.val())
+        });
+    }
 
     // ui event for get cards button
     $("#listcards").click(function(){
@@ -22,8 +27,6 @@ $(document).ready(function(){
         // post new card
         createCard(newCard(), function(result){
             $("#div2").html('Created new card with key ' + result.name);
-            // get and update list of cards
-            getCards(updateCardsList)
         })
     });
 
@@ -33,8 +36,6 @@ $(document).ready(function(){
         var cardId = selectRandom(Object.keys(cards))
         claimCard(cardId, randAddr(), function(result){
             $("#div3").html('User ' + result.claimed_by + ' claimed "' + cards[cardId].task_name + '"');
-            // get and update list of cards
-            getCards(updateCardsList)
         })
     });
 
@@ -44,8 +45,6 @@ $(document).ready(function(){
         var cardId = selectRandom(Object.keys(cards))
         approveCard(cardId, function(result) {
                 $("#div4").html('Card "' + cards[cardId].task_name + '" was approved and funds were released');
-                // get and update list of cards
-                getCards(updateCardsList)
         })
     });
 
@@ -66,8 +65,6 @@ $(document).ready(function(){
         var newBalance = cards[cardId].acct_bal + fundsToAdd
         fundCard(cardId, newBalance, function(result) {
             $("#div6").html('Added ' + fundsToAdd + ' to card "' + cards[cardId].task_name + '" balance');
-            // get and update list of cards
-            getCards(updateCardsList)
         });
     });
 
@@ -76,8 +73,9 @@ $(document).ready(function(){
         // put only one new card there by deleting all others
         deleteCards(newCard(), function(result) {
             $("#div7").html('Deleted all cards but added new one');
-            // get and update list of cards
-            getCards(updateCardsList)
         });
     });
+
+    // Start the server.
+    startListeners();
 });
