@@ -21,4 +21,4 @@ Buttons demonstrate the actions the UI will call.
 
 # Personal Note
 
-[This](https://ojones.github.io/ethkan-firebase/) project was made to demostrate how to use Firebase as a temporary backend. This allows the frontend team to structure and store data on the fly. The backend can then use the frontend teams work to inform their production services.
+[This](https://ojones.github.io/ethkan-firebase/) project was made to demostrate how to use Firebase as a temporary backend. This allows the frontend team to structure and store data on the fly. The backend team can then use Firebase data to inform their production services.
